@@ -173,7 +173,7 @@ const CreatePost = () => {
                 data.append('file', file);
 
                 const response = await axios.post(
-                    'http://localhost:8000/file/upload',
+                    `${process.env.REACT_APP_API_URL}/file/upload`,
                     data,
                     {
                         withCredentials: true,
