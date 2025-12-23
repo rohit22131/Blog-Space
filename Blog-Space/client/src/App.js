@@ -1,4 +1,3 @@
-// App.jsx
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
@@ -16,35 +15,28 @@ import "react-toastify/dist/ReactToastify.css";
 import Profile from "./components/profile/Profile";
 
 // ---------------- PRIVATE ROUTE ----------------
-const PrivateRoute = ({ isAuthenticated, isUserAuthenticated }) => {
-  // Still checking auth
+const PrivateRoute = ({ isAuthenticated, setIsAuthenticated }) => {
   if (isAuthenticated === null) return <div>Loading...</div>;
-
-  // Not authenticated → redirect to login
   if (!isAuthenticated) return <Navigate replace to="/account" />;
 
-  // Authenticated → render header and child routes
   return (
     <>
-      <Header isUserAuthenticated={isUserAuthenticated} />
+      <Header setIsAuthenticated={setIsAuthenticated} />
       <Outlet />
     </>
   );
 };
 
-
 function App() {
-  // null = loading, true = authenticated, false = not authenticated
-  const [isAuthenticated, isUserAuthenticated] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
-  // Check auth on app load / refresh
   useEffect(() => {
     const verifyUser = async () => {
       try {
         const res = await API.checkAuth();
-        isUserAuthenticated(res.data.loggedIn);
-      } catch (error) {
-        isUserAuthenticated(false);
+        setIsAuthenticated(res.data.loggedIn);
+      } catch {
+        setIsAuthenticated(false);
       }
     };
     verifyUser();
@@ -56,19 +48,19 @@ function App() {
       <BrowserRouter>
         <Box style={{ marginTop: 64 }}>
           <Routes>
-            {/* PUBLIC ROUTE */}
+            {/* PUBLIC */}
             <Route
               path="/account"
-              element={<Login isUserAuthenticated={isUserAuthenticated} />}
+              element={<Login setIsAuthenticated={setIsAuthenticated} />}
             />
 
-            {/* PROTECTED ROUTES */}
+            {/* PROTECTED */}
             <Route
               path="/"
               element={
                 <PrivateRoute
                   isAuthenticated={isAuthenticated}
-                  isUserAuthenticated={isUserAuthenticated}
+                  setIsAuthenticated={setIsAuthenticated}
                 />
               }
             >
