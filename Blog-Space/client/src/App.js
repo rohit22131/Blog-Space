@@ -1,3 +1,4 @@
+// App.jsx
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
@@ -16,9 +17,13 @@ import Profile from "./components/profile/Profile";
 
 // ---------------- PRIVATE ROUTE ----------------
 const PrivateRoute = ({ isAuthenticated, setIsAuthenticated }) => {
+  // Still checking auth
   if (isAuthenticated === null) return <div>Loading...</div>;
+
+  // Not authenticated → redirect to login
   if (!isAuthenticated) return <Navigate replace to="/account" />;
 
+  // Authenticated → render header and child routes
   return (
     <>
       <Header setIsAuthenticated={setIsAuthenticated} />
@@ -27,15 +32,18 @@ const PrivateRoute = ({ isAuthenticated, setIsAuthenticated }) => {
   );
 };
 
+
 function App() {
+  // null = loading, true = authenticated, false = not authenticated
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
+  // Check auth on app load / refresh
   useEffect(() => {
     const verifyUser = async () => {
       try {
         const res = await API.checkAuth();
         setIsAuthenticated(res.data.loggedIn);
-      } catch {
+      } catch (error) {
         setIsAuthenticated(false);
       }
     };
@@ -48,13 +56,13 @@ function App() {
       <BrowserRouter>
         <Box style={{ marginTop: 64 }}>
           <Routes>
-            {/* PUBLIC */}
+            {/* PUBLIC ROUTE */}
             <Route
               path="/account"
               element={<Login setIsAuthenticated={setIsAuthenticated} />}
             />
 
-            {/* PROTECTED */}
+            {/* PROTECTED ROUTES */}
             <Route
               path="/"
               element={
