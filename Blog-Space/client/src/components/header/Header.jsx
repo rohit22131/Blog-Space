@@ -116,23 +116,22 @@ const DrawerBox = styled(Box)`
   gap: 20px;
 `;
 
-const Header = ({ isUserAuthenticated }) => {
+const Header = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
   const { account, setAccount } = useContext(DataContext);
   const [openDrawer, setOpenDrawer] = useState(false);
 
-  const logout = async () => {
-    try {
-      await API.logoutUser();
-    } catch (error) {
-      console.log("Logout failed");
-    } finally {
-      localStorage.removeItem("user");
-      setAccount({ name: "", username: "" });
-      isUserAuthenticated(false);
-      navigate("/account");
-    }
-  };
+const logout = async () => {
+  try {
+    await API.logoutUser();
+  } catch (error) {
+    console.log("Logout failed");
+  } finally {
+    setAccount(null);
+    setIsAuthenticated(false);
+    navigate("/account", { replace: true });
+  }
+};
 
   const userInitial = account?.name
     ? account.name[0].toUpperCase()

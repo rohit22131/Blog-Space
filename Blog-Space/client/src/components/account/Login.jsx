@@ -103,16 +103,6 @@ const Login = ({ setIsAuthenticated }) => {
   const { setAccount } = useContext(DataContext);
   const navigate = useNavigate();
 
-  /* ✅ RESTORE LOGIN ON REFRESH */
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      setAccount(user);
-      setIsAuthenticated(true);
-      navigate("/");
-    }
-  }, [navigate, setAccount, setIsAuthenticated]);
-
   useEffect(() => {
     setError("");
   }, [login, signup]);
@@ -126,34 +116,23 @@ const Login = ({ setIsAuthenticated }) => {
   };
 
   /* ================= LOGIN ================= */
-  const loginUser = async () => {
-    try {
-      const response = await API.userLogin(login);
+const loginUser = async () => {
+  try {
+    const response = await API.userLogin(login);
 
-      if (response.isSuccess) {
-        const userData = {
-          name: response.data.name,
-          username: response.data.username,
-          bio: response.data.bio,
-          loggedIn: true
-        };
-
-        localStorage.setItem("user", JSON.stringify(userData));
-
-        setAccount(userData);
-
-        setIsAuthenticated(true);
-
-        toast.success("Login Successful!");
-        navigate("/");
-        return;
-      }
-
-      toast.error("Invalid username or password");
-    } catch (error) {
-      toast.error("Invalid username or password");
+    if (response.isSuccess) {
+      setAccount(response.data);
+      setIsAuthenticated(true);
+      toast.success("Login Successful!");
+      navigate("/", { replace: true });
+      return;
     }
-  };
+
+    toast.error("Invalid username or password");
+  } catch {
+    toast.error("Invalid username or password");
+  }
+};
 
   /* ================= SIGNUP ================= */
   const signupUser = async () => {
