@@ -94,7 +94,7 @@ const ErrorText = styled(Typography)`
 const loginInitial = { username: "", password: "" };
 const signupInitial = { name: "", username: "", password: "" };
 
-const Login = ({ isUserAuthenticated }) => {
+const Login = ({ setIsAuthenticated }) => {
   const [login, setLogin] = useState(loginInitial);
   const [signup, setSignup] = useState(signupInitial);
   const [mode, setMode] = useState("login");
@@ -108,10 +108,10 @@ const Login = ({ isUserAuthenticated }) => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       setAccount(user);
-      isUserAuthenticated(true);
+      setIsAuthenticated(true);
       navigate("/");
     }
-  }, [navigate, setAccount, isUserAuthenticated]);
+  }, [navigate, setAccount, setIsAuthenticated]);
 
   useEffect(() => {
     setError("");
@@ -142,7 +142,7 @@ const Login = ({ isUserAuthenticated }) => {
 
         setAccount(userData);
 
-        isUserAuthenticated(true);
+        setIsAuthenticated(true);
 
         toast.success("Login Successful!");
         navigate("/");
