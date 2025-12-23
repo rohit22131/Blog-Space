@@ -116,7 +116,7 @@ const DrawerBox = styled(Box)`
   gap: 20px;
 `;
 
-const Header = ({ isUserAuthenticated }) => {
+const Header = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
   const { account, setAccount } = useContext(DataContext);
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -129,7 +129,7 @@ const Header = ({ isUserAuthenticated }) => {
     } finally {
       localStorage.removeItem("user");
       setAccount({ name: "", username: "" });
-      isUserAuthenticated(false);
+      setIsAuthenticated(false);
       navigate("/account");
     }
   };

@@ -103,6 +103,16 @@ const Login = ({ setIsAuthenticated }) => {
   const { setAccount } = useContext(DataContext);
   const navigate = useNavigate();
 
+  /* ✅ RESTORE LOGIN ON REFRESH */
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setAccount(user);
+      setIsAuthenticated(true);
+      navigate("/");
+    }
+  }, [navigate, setAccount, setIsAuthenticated]);
+
   useEffect(() => {
     setError("");
   }, [login, signup]);
