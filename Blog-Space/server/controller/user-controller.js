@@ -48,15 +48,15 @@ export const loginUser = async (req, res) => {
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-    secure: false,
-    sameSite: "Lax",
+    secure:  true,
+    sameSite: "None",
     maxAge: 15 * 60 * 1000
   });
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: false,
-    sameSite: "Lax",
+    secure: true,
+    sameSite: "None",
     maxAge: 7 * 24 * 60 * 60 * 1000
   });
 
@@ -73,13 +73,13 @@ export const logoutUser = async (req, res) => {
   try {
     res.clearCookie("accessToken", {
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: true,
+      sameSite: "None",
     });
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: true,
+      sameSite: "None",
     });
 
     return res.status(200).json({ msg: "Logout successful" });
